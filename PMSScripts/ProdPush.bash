@@ -38,13 +38,13 @@ LogMessage() {
 } # end of LogMessage()
 
 cd /usr/home/pacdev/public_html/pacmdev.org/sites/default/files/comp/points/Access > /dev/null
-tar czf $TARBALL access.php
+tar czf $TARBALL access.php .user.ini
 # push tarball to production
 scp -p $TARBALL pacmasters@pacmasters.pairserver.com:$PRODDIRECTORY
 # untar the new access.php
 # Also clean out old tar files.
 ssh pacmasters@pacmasters.pairserver.com \
-	"( cd $PRODDIRECTORY; rm -f access.php; tar xf $TARBALL; rm -f $TARBALL )"
+	"( cd $PRODDIRECTORY; rm -f access.php .user.ini; tar xf $TARBALL; rm -f $TARBALL; )"
 
 LogMessage "OW PMSAccessLogging access.php pushed to PRODUCTION by $SIMPLE_SCRIPT_NAME on $USERHOST" \
 	"$(cat <<- BUp9
@@ -53,6 +53,15 @@ LogMessage "OW PMSAccessLogging access.php pushed to PRODUCTION by $SIMPLE_SCRIP
 	(STARTed on $STARTDATE, FINISHed on $(date +'%a, %b %d %G at %l:%M:%S %p %Z'))
 	BUp9
 	)"
+
+# save the most recent Prod pushes 
+mkdir -p HistoricalProdPushes
+mv $TARBALL HistoricalProdPushes
+# Also clean out old tar files.
+cd HistoricalProdPushes
+ls -tp | grep -v '/$' | tail -n +10 | xargs -I {} rm -- {}
+
+
 
 echo 'Done!'
 

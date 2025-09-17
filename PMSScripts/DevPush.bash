@@ -53,6 +53,7 @@ if [ -e "access.php" ] ; then
 	mkdir -p $DESTINATION_DIR
     rm -f $DESTINATION_DIR/access.php
 	cp  access.php  $DESTINATION_DIR
+	cp  user.ini  $DESTINATION_DIR/.user.ini
 	LogMessage "access.php pushed to dev by $SIMPLE_SCRIPT_NAME on $USERHOST" "$(cat <<- BUp9 
 		Destination File: $DESTINATION_DIR/access.php?display=x
 		(STARTed on $STARTDATE, FINISHed on $(date +'%a, %b %d %G at %l:%M:%S %p %Z'))
